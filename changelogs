@@ -1,0 +1,7 @@
+20150701[]
+1.修改几处注释错误[ChromeShowPageTraceBehavior,FireShowPageTraceBehavior,UpgradeNoticeBehavior]
+2.'CHROME_SHOW_PAGE_TRACE' => true, //[new add]for ChromeShowPageTraceBehavior enable
+3.'FORCE_LOG_TRACE' => true, //[new add]Think::trace for force log trace info to file
+4.即使纪录到文件日志，页面的trace也会纪录相关信息。增加FORCE_LOG_TRACE配置项
+5.修复Think\Upload不支持文件上传时名字混合数组和其他命名的bug
+*6.【自己的版本】新增Think\Think::$_logs静态变量，记录类映射、实例化对象、和autoloadclass

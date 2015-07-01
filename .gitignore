@@ -1,1 +1,4 @@
 .idea
+.php-tmp
+.php;
+/\d.php

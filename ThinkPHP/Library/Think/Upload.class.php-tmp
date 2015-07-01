@@ -15,19 +15,19 @@ class Upload {
 	 * @var array
 	 */
 	private $config = array(
-		'mimes' => array(), //允许上传的文件MiMe类型
-		'maxSize' => 0, //上传的文件大小限制 (0-不做限制)
-		'exts' => array(), //允许上传的文件后缀
-		'autoSub' => true, //自动子目录保存文件
-		'subName' => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
-		'rootPath' => './Uploads/', //保存根路径
-		'savePath' => '', //保存路径
-		'saveName' => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
-		'saveExt' => '', //文件保存后缀，空则使用原后缀
-		'replace' => false, //存在同名是否覆盖
-		'hash' => true, //是否生成hash编码
-		'callback' => false, //检测文件是否存在回调，如果存在返回文件信息数组
-		'driver' => '', // 文件上传驱动
+		'mimes'        => array(), //允许上传的文件MiMe类型
+		'maxSize'      => 0, //上传的文件大小限制 (0-不做限制)
+		'exts'         => array(), //允许上传的文件后缀
+		'autoSub'      => true, //自动子目录保存文件
+		'subName'      => array('date', 'Y-m-d'), //子目录创建方式，[0]-函数名，[1]-参数，多个参数使用数组
+		'rootPath'     => './Uploads/', //保存根路径
+		'savePath'     => '', //保存路径
+		'saveName'     => array('uniqid', ''), //上传文件命名规则，[0]-函数名，[1]-参数，多个参数使用数组
+		'saveExt'      => '', //文件保存后缀，空则使用原后缀
+		'replace'      => false, //存在同名是否覆盖
+		'hash'         => true, //是否生成hash编码
+		'callback'     => false, //检测文件是否存在回调，如果存在返回文件信息数组
+		'driver'       => '', // 文件上传驱动
 		'driverConfig' => array(), // 上传驱动配置
 	);
 
@@ -35,7 +35,7 @@ class Upload {
 	 * 上传错误信息
 	 * @var string
 	 */
-	private $error = ''; //上传错误信息
+	private $error = '';//上传错误信息
 
 	/**
 	 * 上传驱动实例
@@ -109,7 +109,7 @@ class Upload {
 	 */
 	public function uploadOne($file) {
 		$info = $this->upload(array($file));
-		return $info ? $info[0] : $info;
+		return $info?$info[0]:$info;
 	}
 
 	/**
@@ -165,18 +165,18 @@ class Upload {
 
 			/* 获取文件hash */
 			if ($this->hash) {
-				$file['md5'] = md5_file($file['tmp_name']);
+				$file['md5']  = md5_file($file['tmp_name']);
 				$file['sha1'] = sha1_file($file['tmp_name']);
 			}
 
 			/* 调用回调函数检测文件是否存在 */
 			$data = call_user_func($this->callback, $file);
 			if ($this->callback && $data) {
-				if (file_exists('.' . $data['path'])) {
+				if (file_exists('.'.$data['path'])) {
 					$info[$key] = $data;
 					continue;
 				} elseif ($this->removeTrash) {
-					call_user_func($this->removeTrash, $data); //删除垃圾据
+					call_user_func($this->removeTrash, $data);//删除垃圾据
 				}
 			}
 
@@ -193,7 +193,7 @@ class Upload {
 			if (false === $subpath) {
 				continue;
 			} else {
-				$file['savepath'] = $this->savePath . $subpath;
+				$file['savepath'] = $this->savePath.$subpath;
 			}
 
 			/* 对图像文件进行严格检测 */
@@ -217,7 +217,7 @@ class Upload {
 		if (isset($finfo)) {
 			finfo_close($finfo);
 		}
-		return empty($info) ? false : $info;
+		return empty($info)?false:$info;
 	}
 
 	/**
@@ -228,10 +228,10 @@ class Upload {
 	 */
 	private function dealFiles($files) {
 		$fileArray = array();
-		$n = 0;
+		$n         = 0;
 		foreach ($files as $key => $file) {
 			if (is_array($file['name'])) {
-				$keys = array_keys($file);
+				$keys  = array_keys($file);
 				$count = count($file['name']);
 				for ($i = 0; $i < $count; $i++) {
 					$fileArray[$n]['key'] = $key;
@@ -257,9 +257,9 @@ class Upload {
 	 * @param array $config 驱动配置
 	 */
 	private function setDriver($driver = null, $config = null) {
-		$driver = $driver ?: ($this->driver ?: C('FILE_UPLOAD_TYPE'));
-		$config = $config ?: ($this->driverConfig ?: C('UPLOAD_TYPE_CONFIG'));
-		$class = strpos($driver, '\\') ? $driver : 'Think\\Upload\\Driver\\' . ucfirst(strtolower($driver));
+		$driver         = $driver?:($this->driver?:C('FILE_UPLOAD_TYPE'));
+		$config         = $config?:($this->driverConfig?:C('UPLOAD_TYPE_CONFIG'));
+		$class          = strpos($driver, '\\')?$driver:'Think\\Upload\\Driver\\'.ucfirst(strtolower($driver));
 		$this->uploader = new $class($config);
 		if (!$this->uploader) {
 			E("不存在上传驱动：{$name}");
@@ -353,7 +353,7 @@ class Upload {
 	 * @param string $mime 数据
 	 */
 	private function checkMime($mime) {
-		return empty($this->config['mimes']) ? true : in_array(strtolower($mime), $this->mimes);
+		return empty($this->config['mimes'])?true:in_array(strtolower($mime), $this->mimes);
 	}
 
 	/**
@@ -361,7 +361,7 @@ class Upload {
 	 * @param string $ext 后缀
 	 */
 	private function checkExt($ext) {
-		return empty($this->config['exts']) ? true : in_array(strtolower($ext), $this->exts);
+		return empty($this->config['exts'])?true:in_array(strtolower($ext), $this->exts);
 	}
 
 	/**
@@ -384,9 +384,9 @@ class Upload {
 		}
 
 		/* 文件保存后缀，支持强制更改文件后缀 */
-		$ext = empty($this->config['saveExt']) ? $file['ext'] : $this->saveExt;
+		$ext = empty($this->config['saveExt'])?$file['ext']:$this->saveExt;
 
-		return $savename . '.' . $ext;
+		return $savename.'.'.$ext;
 	}
 
 	/**
@@ -395,11 +395,11 @@ class Upload {
 	 */
 	private function getSubPath($filename) {
 		$subpath = '';
-		$rule = $this->subName;
+		$rule    = $this->subName;
 		if ($this->autoSub && !empty($rule)) {
-			$subpath = $this->getName($rule, $filename) . '/';
+			$subpath = $this->getName($rule, $filename).'/';
 
-			if (!empty($subpath) && !$this->uploader->mkdir($this->savePath . $subpath)) {
+			if (!empty($subpath) && !$this->uploader->mkdir($this->savePath.$subpath)) {
 				$this->error = $this->uploader->getError();
 				return false;
 			}
@@ -417,7 +417,7 @@ class Upload {
 		$name = '';
 		if (is_array($rule)) {
 			//数组规则
-			$func = $rule[0];
+			$func  = $rule[0];
 			$param = (array) $rule[1];
 			foreach ($param as &$value) {
 				$value = str_replace('__FILE__', $filename, $value);
